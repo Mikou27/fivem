@@ -1294,7 +1294,7 @@ float CalculateWheelValue(CVehicle* vehicle, int wheelCount, bool drive)
 
 static DWORD(WINAPI* g_origXInputGetState)(_In_ DWORD dwUserIndex, _Out_ XINPUT_STATE* pState);
 
-static bool g_useWGI = true;
+static bool g_useWGI = false;
 
 static std::mutex gamepadMutex;
 static std::vector<Gamepad> g_gamepads;
