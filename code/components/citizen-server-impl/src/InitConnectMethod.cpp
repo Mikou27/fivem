@@ -689,13 +689,13 @@ static InitFunction initFunction([]()
 					}
 				}
 
-				if (maxTrust < minTrustVar->GetValue() || minVariance > maxVarianceVar->GetValue())
+			/* 	if (maxTrust < minTrustVar->GetValue() || minVariance > maxVarianceVar->GetValue())
 				{
 					clientRegistry->RemoveClient(lockedClient);
 
 					sendError("You can not join this server due to your identifiers being insufficient. Please try starting Steam or another identity provider and try again.");
 					return;
-				}
+				} */
 
 				auto svGame = instance->GetComponent<fx::GameServer>()->GetGameName();
 				bool canEnforceBuild = (svGame == fx::GameName::GTA5 || svGame == fx::GameName::RDR3);
