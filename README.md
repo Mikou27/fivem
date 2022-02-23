@@ -1,6 +1,6 @@
 # <img src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.6/assets/png/1f40c.png" width="32" height="32"> Cfx.re (FiveM/RedM) 
 
-This repository contains a customized code of the Cfx.re projects that aim to bring back FiveM compatibility with the Nucleus Co-op project for splitscreen and lan play.
+This repository contains a customized code of the Cfx.re projects that aim to bring back FiveM compatibility with the Nucleus Co-op project for splitscreen and lan play in respect of the Cfx project licences and rules.
 
 * [FiveM](https://fivem.net/), a dual-purpose (SP/MP) modification framework for the PC version of Grand Theft Auto V as released by Rockstar Games.
 * [RedM](https://redm.gg/), a modification framework for the PC version of Red Dead Redemption 2 as released by Rockstar Games(Not compatible with Nucleus Co-op).
