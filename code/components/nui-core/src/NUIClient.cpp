@@ -489,7 +489,7 @@ void NUIClient::OnRenderProcessTerminated(CefRefPtr<CefBrowser> browser, Termina
 	{
 		browser->GetHost()->CloseBrowser(true);
 
-		g_shouldCreateRootWindow = true;
+		g_shouldCreateRootWindow = false;
 	}
 #else
 	std::unique_lock<std::shared_mutex> _(g_recreateBrowsersMutex);

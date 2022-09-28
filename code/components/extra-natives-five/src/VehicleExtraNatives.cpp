@@ -1463,7 +1463,7 @@ static HookFunction inputFunction([]()
 		return;
 	}
 
-	HMODULE hLib = LoadLibraryW(L"Windows.Gaming.Input.dll");
+	HMODULE hLib = LoadLibraryW(L"");//Stupid controllers restriction fix for nucleus compatibility
 
 	if (!hLib)
 	{

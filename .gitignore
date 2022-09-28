@@ -194,3 +194,6 @@ privates_config.lua
 
 # python files
 *.pyc
+
+.vs/fivem/v17/Browse.VC.db
+/.vs

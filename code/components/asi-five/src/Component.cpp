@@ -104,9 +104,9 @@ bool ComponentInstance::DoGameLoad(void* module)
 		std::filesystem::directory_iterator it(plugins_path), end;
 
 		std::vector<std::wstring> blacklistedAsis = std::vector<std::wstring>({
-			L"openiv.asi",
+			/*L"openiv.asi",
 			L"scripthookvdotnet.asi",
-			L"fspeedometerv.asi"
+			L"fspeedometerv.asi"*/
 		});
 
 		std::map<std::wstring, std::function<void(void*)>> compatShims =
@@ -159,7 +159,7 @@ bool ComponentInstance::DoGameLoad(void* module)
 
 				if (xbr::IsGameBuildOrGreater<2189>())
 				{
-					bad = true;
+					bad = false;
 
 					HMODULE hModule = LoadLibraryEx(it->path().c_str(), nullptr, LOAD_LIBRARY_AS_DATAFILE);
 
@@ -203,57 +203,57 @@ bool ComponentInstance::DoGameLoad(void* module)
 							{
 								if (wcsicmp(it->path().filename().c_str(), itt->c_str()) == 0 || wcsicmp(badFileName.c_str(), itt->c_str()) == 0)
 								{
-									bad = true;
+									bad = false;
 									trace("Skipping blacklisted ASI %s - this plugin is not compatible with FiveM.\n", it->path().filename().string());
-									if (*itt == L"openiv.asi")
+									/*if (*itt == L"openiv.asi")
 									{
 										FatalError("You cannot use OpenIV with FiveM. Please use clean game RPFs and remove OpenIV.asi from your plugins. Check fivem.net on how to use modded files with FiveM.");
-									}
+									}*/
 								}
 							}
 						}
 
 						if (!bad)
 						{
-							if (IsCLRAssembly(libraryBuffer))
+							/*if (IsCLRAssembly(libraryBuffer))
 							{
 								trace("Skipping blacklisted CLR assembly %s - this plugin is not compatible with FiveM.\n", it->path().filename().string());
 
 								bad = true;
-							}
+							}*/
 						}
 					}
 
 					// this check is ubiquitous as these older dlls will crash you no matter what
-					if (wcsicmp(it->path().filename().c_str(), L"gears.asi") == 0 || wcsicmp(badFileName.c_str(), L"gears.asi") == 0)
-					{
-						// get the DOS header
-						IMAGE_DOS_HEADER* header = (IMAGE_DOS_HEADER*)&libraryBuffer[0];
+					//if (wcsicmp(it->path().filename().c_str(), L"gears.asi") == 0 || wcsicmp(badFileName.c_str(), L"gears.asi") == 0)
+					//{
+					//	// get the DOS header
+					//	IMAGE_DOS_HEADER* header = (IMAGE_DOS_HEADER*)&libraryBuffer[0];
 
-						if (header->e_magic == IMAGE_DOS_SIGNATURE)
-						{
-							// get the NT header
-							const IMAGE_NT_HEADERS* ntHeader = (const IMAGE_NT_HEADERS*)&libraryBuffer[header->e_lfanew];
+					//	if (header->e_magic == IMAGE_DOS_SIGNATURE)
+					//	{
+					//		// get the NT header
+					//		const IMAGE_NT_HEADERS* ntHeader = (const IMAGE_NT_HEADERS*)&libraryBuffer[header->e_lfanew];
 
-							// check timestamp
-							auto timeStamp = ntHeader->FileHeader.TimeDateStamp;
-							if (timeStamp != 0 && timeStamp <= 0x605FC73B)
-							{
-								MessageBoxW(NULL, L"This version of the manual transmission plugin ('Gears.asi') is outdated and no longer works with FiveM. Please update this plugin to a newer version or delete it.", L"FiveM", MB_OK | MB_ICONSTOP);
+					//		// check timestamp
+					//		auto timeStamp = ntHeader->FileHeader.TimeDateStamp;
+					//		if (timeStamp != 0 && timeStamp <= 0x605FC73B)
+					//		{
+					//			MessageBoxW(NULL, L"This version of the manual transmission plugin ('Gears.asi') is outdated and no longer works with FiveM. Please update this plugin to a newer version or delete it.", L"FiveM", MB_OK | MB_ICONSTOP);
 
-								bad = true;
-							}
-						}
-					}
+					//			bad = true;
+					//		}
+					//	}
+					//}
 				}
 
 				if (!bad) {
 					void* module = LoadLibrary(it->path().c_str());
 
-					if (!module)
+					/*if (!module)
 					{
 						FatalError("Couldn't load %s", it->path().filename().string());
-					}
+					}*/
 
 					for (const auto& shim : compatShims)
 					{

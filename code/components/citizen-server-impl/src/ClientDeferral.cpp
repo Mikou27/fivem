@@ -102,20 +102,30 @@ void ClientDeferral::UpdateDeferrals()
 		auto& ds = entry.second;
 
 		// if not done, append progress
-		if (!ds.done)
-		{
-			progressMsg << fmt::sprintf("%s: %s\n", ds.description, ds.message);
-			allDone = false;
-		}
+		//if (!ds.done)
+		//{
+		//	progressMsg << fmt::sprintf("%s: %s\n", ds.description, ds.message); 
+		//	allDone = false;
+		//}
 
-		// if rejected, break and set rejection message
-		if (ds.rejected)
-		{
-			rejectionMsg = ds.message;
+		//// if rejected, break and set rejection message
+		//if (ds.rejected)
+		//{
+		//	rejectionMsg = ds.message;
 
-			rejected = true;
-			break;
-		}
+		//	rejected = true;
+		//	break;
+		//}
+
+
+    //commenting the above code avoid the need of editing the following lines in "config.json" int the server folder.
+	/*	"playerController" : {
+			"onJoinCheckBan" : true,
+			"onJoinCheckWhitelist" : true,
+			"minSessionTime" : 15,
+			"whitelistRejectionMessage" : "You are not yet whitelisted in this server.\nPlease join http://discord.gg/example.\nYour Request ID: <id>",
+			"wipePendingWLOnStart" : true
+		},*/
 	}
 
 	if (rejected)

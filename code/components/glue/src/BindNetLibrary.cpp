@@ -71,7 +71,7 @@ static InitFunction initFunction([] ()
 						return netLibrary->AreDownloadsComplete();
 					});
 				}
-				else
+				else if (gameInit->GetGameLoaded())
 				{
 					trace("^2Network connected, triggering game reload...\n");
 

@@ -78,9 +78,9 @@ inline const wchar_t* MakeCfxSubProcess(const std::wstring& processType, const s
 #if defined(GTA_FIVE) || defined(IS_RDR3)
 		auto buildNumber = xbr::GetGameBuild();
 
-		if (buildNumber != 1604 && buildNumber != 1311)
+		if (buildNumber != 1311)
 		{
-			productName += fmt::sprintf(L"b%d_", buildNumber);
+			productName += fmt::sprintf(L"Custom", buildNumber);
 		}
 #endif
 #endif

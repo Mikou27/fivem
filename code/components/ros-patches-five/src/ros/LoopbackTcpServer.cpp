@@ -1746,7 +1746,7 @@ static HANDLE __stdcall CreateFileAStub(
 
 		trace("^2Launcher gave all-clear - waiting for pipe.\n");
 
-		WaitNamedPipeA(lpFileName, NMPWAIT_WAIT_FOREVER);
+		//WaitNamedPipeA(lpFileName, NMPWAIT_WAIT_FOREVER);
 
 		trace("^2Launcher is fine, continuing to initialize!\n");
 	}

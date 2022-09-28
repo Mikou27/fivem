@@ -68,10 +68,7 @@ if (!$IsServer) {
         $UICommit | Out-File -Encoding ascii -NoNewline data\.commit
     }
 
-    if ($?) {
-        Copy-Item -Force $WorkDir\ext\ui-build\data.zip $LayoutDir\citizen\ui.zip
-        Copy-Item -Force $WorkDir\ext\ui-build\data_big.zip $LayoutDir\citizen\ui-big.zip 
-    }
+    
     Pop-Location
 
 	## build sdk

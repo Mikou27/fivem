@@ -352,141 +352,141 @@ static InitFunction initFunction([] ()
 		std::wstring brandingEmoji;
 		std::wstring brandName;
 
-		if (inGame)
-		{
-			auto getDayEmoji = []
-			{
-				SYSTEMTIME systemTime;
-				GetLocalTime(&systemTime);
-
-				switch (systemTime.wHour)
-				{
-					case 1:
-					case 2:
-					case 3:
-					case 4:
-					case 5:
-					case 6:
-						return L"\xD83C\xDF19";
-					case 7:
-					case 8:
-					case 9:
-					case 10:
-					case 11:
-					case 12:
-						return L"\xD83C\xDF42";
-					case 13:
-					case 14:
-					case 15:
-					case 16:
-					case 17:
-					case 18:
-						return L"\xD83C\xDF50";
-					case 19:
-					case 20:
-					case 21:
-					case 22:
-					case 23:
-					case 0:
-						return L"\xD83E\xDD59";
-				}
-
-				return L"";
-			};
-
-			brandName = L"FiveM";
-			brandingEmoji = getDayEmoji();
-
-#if defined(IS_RDR3)
-			brandName = L"RedM";
-#elif defined(GTA_NY)
-			brandName = L"LibertyM";
-			brandingEmoji = L"\U0001F5FD";
-#endif
-
-			if (!CfxIsSinglePlayer() && !getenv("CitizenFX_ToolMode"))
-			{
-				auto emoji = customBrandingEmoji.GetValue();
-
-				if (!emoji.empty())
-				{
-					if (Instance<ICoreGameInit>::Get()->HasVariable("endUserPremium"))
-					{
-						try
-						{
-							auto it = emoji.begin();
-							utf8::advance(it, 1, emoji.end());
-
-							std::vector<uint16_t> uchars;
-							uchars.reserve(2);
-
-							utf8::utf8to16(emoji.begin(), it, std::back_inserter(uchars));
-
-							brandingEmoji = std::wstring{ uchars.begin(), uchars.end() };
-						}
-						catch (const utf8::exception& e)
-						{
-						}
-					}
-				}
-
-				if (Instance<ICoreGameInit>::Get()->OneSyncEnabled)
-				{
-					brandName += L"*";
-				}
-
-				brandName += fmt::sprintf(L" (b%d)", xbr::GetGameBuild());
-
-				if (launch::IsSDKGuest())
-				{
-					brandName += L" (SDK)";
-				}
-				else if (updateChannel == L"canary")
-				{
-					brandName += L" (Canary)";
-				}
-				else if (updateChannel == L"beta")
-				{
-					brandName += L" (Beta)";
-				}
-			}
-		}
-		else // (!inGame), i.e. menu
-		{
-			static auto version = ([]()
-			{
-				FILE* f = _wfopen(MakeRelativeCitPath(L"citizen/release.txt").c_str(), L"r");
-				int version = -1;
-
-				if (f)
-				{
-					char ver[128];
-
-					fgets(ver, sizeof(ver), f);
-					fclose(f);
-
-					version = atoi(ver);
-				}
-				else
-				{
-					version = 0;
-				}
-
-				return version;
-			})();
-
-			static auto updateChannelTag = ([]() -> std::wstring
-			{
-				if (updateChannel != L"production")
-				{
-					return fmt::sprintf(L"/%s", updateChannel);
-				}
-
-				return L"";
-			})();
-
-			brandName = fmt::sprintf(L"Ver. %d%s", version, updateChannelTag);
-		}
+//		if (inGame)
+//		{
+//			auto getDayEmoji = []
+//			{
+//				SYSTEMTIME systemTime;
+//				GetLocalTime(&systemTime);
+//
+//				switch (systemTime.wHour)
+//				{
+//					case 1:
+//					case 2:
+//					case 3:
+//					case 4:
+//					case 5:
+//					case 6:
+//						return L"\xD83C\xDF19";
+//					case 7:
+//					case 8:
+//					case 9:
+//					case 10:
+//					case 11:
+//					case 12:
+//						return L"\xD83C\xDF42";
+//					case 13:
+//					case 14:
+//					case 15:
+//					case 16:
+//					case 17:
+//					case 18:
+//						return L"\xD83C\xDF50";
+//					case 19:
+//					case 20:
+//					case 21:
+//					case 22:
+//					case 23:
+//					case 0:
+//						return L"\xD83E\xDD59";
+//				}
+//
+//				return L"";
+//			};
+//
+//			brandName = L"FiveM";
+//			brandingEmoji = getDayEmoji();
+//
+//#if defined(IS_RDR3)
+//			brandName = L"RedM";
+//#elif defined(GTA_NY)
+//			brandName = L"LibertyM";
+//			brandingEmoji = L"\U0001F5FD";
+//#endif
+//
+//			if (!CfxIsSinglePlayer() && !getenv("CitizenFX_ToolMode"))
+//			{
+//				auto emoji = customBrandingEmoji.GetValue();
+//
+//				if (!emoji.empty())
+//				{
+//					if (Instance<ICoreGameInit>::Get()->HasVariable("endUserPremium"))
+//					{
+//						try
+//						{
+//							auto it = emoji.begin();
+//							utf8::advance(it, 1, emoji.end());
+//
+//							std::vector<uint16_t> uchars;
+//							uchars.reserve(2);
+//
+//							utf8::utf8to16(emoji.begin(), it, std::back_inserter(uchars));
+//
+//							brandingEmoji = std::wstring{ uchars.begin(), uchars.end() };
+//						}
+//						catch (const utf8::exception& e)
+//						{
+//						}
+//					}
+//				}
+//
+//				if (Instance<ICoreGameInit>::Get()->OneSyncEnabled)
+//				{
+//					brandName += L"*";
+//				}
+//
+//				brandName += fmt::sprintf(L"", L"");
+//
+//				if (launch::IsSDKGuest())
+//				{
+//					brandName += L" (SDK)";
+//				}
+//				else if (updateChannel == L"canary")
+//				{
+//					brandName += L" (Canary)";
+//				}
+//				else if (updateChannel == L"beta")
+//				{
+//					brandName += L" (Beta)";
+//				}
+//			}
+//		}
+//		else // (!inGame), i.e. menu
+//		{
+//			static auto version = ([]()
+//			{
+//				FILE* f = _wfopen(MakeRelativeCitPath(L"citizen/release.txt").c_str(), L"r");
+//				int version = -1;
+//
+//				if (f)
+//				{
+//					char ver[128];
+//
+//					fgets(ver, sizeof(ver), f);
+//					fclose(f);
+//
+//					version = atoi(ver);
+//				}
+//				else
+//				{
+//					version = 0;
+//				}
+//
+//				return version;
+//			})();
+//
+//			static auto updateChannelTag = ([]() -> std::wstring
+//			{
+//				if (updateChannel != L"production")
+//				{
+//					return fmt::sprintf(L"/%s", updateChannel);
+//				}
+//
+//				return L"";
+//			})();
+//
+//			brandName = fmt::sprintf(L"Ver. %d%s", version, updateChannelTag);
+//		}
 
 		enum class AnchorPos
 		{

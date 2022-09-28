@@ -1498,7 +1498,7 @@ void InitializeDumpServer(int inheritedHandle, int parentPid)
 					}
 					else if (type == TDN_TIMER)
 					{
-						auto uploadError = self->uploadError;
+						auto uploadError = false;
 						auto& crashId = self->crashId;
 						const auto& crashHashString = self->crashHashString;
 
@@ -1576,13 +1576,13 @@ void InitializeDumpServer(int inheritedHandle, int parentPid)
 
 				std::wstring fpath = MakeRelativeCitPath(L"CitizenFX.ini");
 
-				bool uploadCrashes = true;
+				bool uploadCrashes = false;
 				bool bigMemoryDump = false;
 
 				if (GetFileAttributes(fpath.c_str()) != INVALID_FILE_ATTRIBUTES)
 				{
-					bigMemoryDump = (GetPrivateProfileInt(L"Game", L"EnableFullMemoryDump", 0, fpath.c_str()) != 0);
-					uploadCrashes = (GetPrivateProfileInt(L"Game", L"DisableCrashUpload", 0, fpath.c_str()) != 1);
+					bigMemoryDump = false;
+					uploadCrashes = false;
 				}
 
 				if (bigMemoryDump && shouldTerminate)
@@ -1602,13 +1602,14 @@ void InitializeDumpServer(int inheritedHandle, int parentPid)
 					CloseHandle(pi.hThread);
 				}
 
-				int timeout = 20000;
+				int timeout = 10000;
 
 				parameters[L"Fatal"] = (shouldTerminate) ? L"true" : L"false";
 
 				// upload the actual minidump file as well
 #if defined(GTA_FIVE) || defined(IS_RDR3)
-				if (uploadCrashes && shouldUpload && HTTPUpload::SendMultipartPostRequest(L"https://crash-ingress.fivem.net/post", parameters, files, &timeout, &responseBody, &responseCode))
+
+				if (uploadCrashes && shouldUpload && HTTPUpload::SendMultipartPostRequest(L"", parameters, files, &timeout, &responseBody, &responseCode))
 				{
 					trace("Crash report service returned %s\n", ToNarrow(responseBody));
 					crashId = responseBody;
@@ -1620,11 +1621,11 @@ void InitializeDumpServer(int inheritedHandle, int parentPid)
 						trace("Error uploading crash: HTTP %d%s\n", responseCode, !responseBody.empty() ? " (" + ToNarrow(responseBody) + ")" : "");
 					}
 
-					uploadError = true;
+					uploadError = false;
 					crashId = L"";
 				}
 #else
-				uploadError = true;
+				uploadError = false;
 				crashId = L"";
 #endif
 

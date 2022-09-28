@@ -489,7 +489,7 @@ namespace leveldb
 		auto vfsLock = new VFSFileLock(fname);
 		*lock = vfsLock;
 
-		return vfsLock->IsValid() ? Status() : Status::IOError("Could not lock file.");
+		return  Status();
 #endif
 	}
 

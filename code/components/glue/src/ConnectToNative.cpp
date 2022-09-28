@@ -338,7 +338,10 @@ struct ServerLink
 #include <propkey.h>
 #include <propvarutil.h>
 #include <botan/base64.h>
-
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
 namespace WRL = Microsoft::WRL;
 
 static WRL::ComPtr<IShellLink> MakeShellLink(const ServerLink& link)
@@ -514,7 +517,7 @@ static void DisconnectCmd()
 		OnMsgConfirm();
 	}
 }
-
+bool changeName = false;
 static InitFunction initFunction([] ()
 {
 	static std::function<void()> g_onYesCallback;
@@ -1008,6 +1011,8 @@ static InitFunction initFunction([] ()
 		}
 	});
 
+	
+
 	nui::OnInvokeNative.Connect([](const wchar_t* type, const wchar_t* arg)
 	{
 		static std::string lastHostName;
@@ -1061,6 +1066,7 @@ static InitFunction initFunction([] ()
 			{
 				nui::PostFrameMessage("mpMenu", fmt::sprintf(R"({ "type": "setSwitchCl", "enabled": %s })", true));
 				initSwitched = true;
+				changeName = false;
 			}
 		}
 		else if (!_wcsicmp(type, L"reconnect"))
@@ -1111,16 +1117,26 @@ static InitFunction initFunction([] ()
 			};
 			console::GetDefaultContext()->ExecuteSingleCommand(ToNarrow(arg));
 		}
-		else if (!_wcsicmp(type, L"changeName"))
+		else if (_wcsicmp(type, L"changeName") && changeName == false)
 		{
-			std::string newusername = ToNarrow(arg);
-			if (!newusername.empty()) {
-				if (newusername.c_str() != netLibrary->GetPlayerName()) {
-					netLibrary->SetPlayerName(newusername.c_str());
-					trace(va("Changed player name to %s\n", newusername.c_str()));
-					nui::PostFrameMessage("mpMenu", fmt::sprintf(R"({ "type": "setSettingsNick", "nickname": "%s" })", newusername));
+			std::fstream newfile;
+			std::string tp;
+
+			newfile.open(MakeRelativeCitPath(L"nicknames.txt"), std::ios::in);
+
+			if (newfile.is_open())
+			{
+				while (getline(newfile, tp))
+				{
+					cout << tp << "\n";
+					netLibrary->SetPlayerName(tp.c_str());
+					trace(va(" Changed player name to %s\n ", tp.c_str()));
+					nui::PostFrameMessage("mpMenu", fmt::sprintf(R"({ "type": "setSettingsNick", "nickname": "%s" })", tp));
 				}
+
+				newfile.close(); // close the file object.
 			}
+			changeName = true;
 		}
 		else if (!_wcsicmp(type, L"setLocale"))
 		{

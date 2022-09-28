@@ -86,7 +86,7 @@ static pplx::cancellation_token_source cts;
 
 static void ThrottledConnectionProgress(const std::string& string, int count, int total, bool cancelable)
 {
-	std::lock_guard<std::mutex> _(progressMutex);
+	//::lock_guard<std::mutex> _(progressMutex);
 	nextProgress = { string, count, total, cancelable };
 }
 
@@ -244,7 +244,7 @@ static InitFunction initFunction([] ()
 
 			if (!updateList.empty())
 			{
-				postMap["resources"] = updateList;
+				//postMap["resources"] = updateList;
 			}
 
 			HttpRequestOptions options;
@@ -263,7 +263,7 @@ static InitFunction initFunction([] ()
 			// #TODO: remove this once server version with `18d5259f60dd203b5705130491ddda4e95665171` becomes mandatory
 			auto curServerUrlNonTls = fmt::sprintf("http://%s/", netLibrary->GetCurrentPeer().ToString()); 
 
-			options.progressCallback = [](const ProgressInfo& progress)
+		/*	options.progressCallback = [](const ProgressInfo& progress)
 			{
 				if (progress.downloadTotal != 0)
 				{
@@ -277,7 +277,7 @@ static InitFunction initFunction([] ()
 						progress.downloadNow / 1000.0),
 						0, 1, false);
 				}
-			};
+			};*/
 
 			ThrottledConnectionProgress("Downloading content manifest...", 0, 1, false);
 
@@ -372,7 +372,7 @@ static InitFunction initFunction([] ()
 
 				manager->OnContentManifestDownloaded(node);
 
-				fx::OnLockStreaming();
+				//fx::OnLockStreaming();
 
 				if (hasValidResources)
 				{
@@ -520,7 +520,7 @@ static InitFunction initFunction([] ()
 				// failure should reset the requested resource, instead
 				if (requiredResources.empty() && !updateList.empty())
 				{
-					std::lock_guard _(g_resourceStartRequestMutex);
+					//std::lock_guard _(g_resourceStartRequestMutex);
 					g_resourceStartRequestSet.erase(updateList);
 				}
 
@@ -544,7 +544,7 @@ static InitFunction initFunction([] ()
 
 							executeNextGameFrame.push([]
 							{
-								fx::OnUnlockStreaming();
+								//fx::OnUnlockStreaming();
 							});
 
 							return;
@@ -584,7 +584,7 @@ static InitFunction initFunction([] ()
 
 					executeNextGameFrame.push([]
 					{
-						fx::OnUnlockStreaming();
+						//fx::OnUnlockStreaming();
 					});
 
 					doneCb();
@@ -604,7 +604,7 @@ static InitFunction initFunction([] ()
 
 				updateResources(resource, [=]()
 				{
-					std::lock_guard _(g_resourceStartRequestMutex);
+					//std::lock_guard _(g_resourceStartRequestMutex);
 					g_resourceStartRequestSet.erase(resource);
 
 					if (**updateResource)
@@ -620,10 +620,10 @@ static InitFunction initFunction([] ()
 		{
 			g_netAddress = address;
 
-			ThrottledConnectionProgress("Unloading content...", 0, 1, false);
+			//ThrottledConnectionProgress("Unloading content...", 0, 1, false);
 
 			fx::ResourceManager* resourceManager = Instance<fx::ResourceManager>::Get();
-			resourceManager->ResetResources();
+			//resourceManager->ResetResources();
 
 			updateResources("", []()
 			{
@@ -631,14 +631,14 @@ static InitFunction initFunction([] ()
 
 			// reinit the reassembler
 			auto reassembler = Instance<fx::ResourceManager>::Get()->GetComponent<fx::EventReassemblyComponent>();
-			reassembler->UnregisterTarget(0);
+			//reassembler->UnregisterTarget(0);
 			reassembler->RegisterTarget(0);
 		});
 
 		netLibrary->OnConnectionErrorEvent.Connect([](const char* error)
 		{
 			{
-				std::lock_guard<std::mutex> _(progressMutex);
+				//std::lock_guard<std::mutex> _(progressMutex);
 				nextProgress = {};
 			}
 
@@ -673,7 +673,7 @@ static InitFunction initFunction([] ()
 
 			if ((GetTickCount64() - lastDownloadTime) > 33)
 			{
-				std::lock_guard<std::mutex> _(progressMutex);
+				//std::lock_guard<std::mutex> _(progressMutex);
 
 				if (nextProgress)
 				{
@@ -775,7 +775,7 @@ static InitFunction initFunction([] ()
 #endif
 			}
 
-			std::lock_guard _(g_resourceStartRequestMutex);
+			//std::lock_guard _(g_resourceStartRequestMutex);
 			if (g_resourceStartRequestSet.find(resourceName) == g_resourceStartRequestSet.end())
 			{
 				g_resourceStartRequestSet.insert(resourceName);
@@ -836,7 +836,7 @@ static InitFunction initFunction([] ()
 		{
 			AddCrashometry("reset_resources", "true");
 
-			Instance<fx::ResourceManager>::Get()->ResetResources();
+			Instance<fx::ResourceManager>::Get()->ResetResources(); 
 		});
 
 		console::GetDefaultContext()->GetCommandManager()->FallbackEvent.Connect([=](const std::string& cmd, const ProgramArguments& args, const std::any& context)

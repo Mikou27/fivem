@@ -298,6 +298,7 @@ int RealMain()
 		wchar_t* exeBaseName = wcsrchr(exeName, L'\\');
 		exeBaseName[0] = L'\0';
 		exeBaseName++;
+		devMode = true; // No need for formaldev file.
 
 		if (GetFileAttributes(MakeRelativeCitPath(fmt::sprintf(L"%s.formaldev", exeBaseName)).c_str()) != INVALID_FILE_ATTRIBUTES ||
 			GetFileAttributes(fmt::sprintf(L"%s.formaldev", exeNameSaved).c_str()) != INVALID_FILE_ATTRIBUTES)
@@ -308,7 +309,7 @@ int RealMain()
 #else
 	bool devMode = true;
 #endif
-
+	
 	// don't allow running a subprocess executable directly
 	if (MakeRelativeCitPath(L"").find(L"cache\\subprocess") != std::string::npos)
 	{
@@ -316,53 +317,55 @@ int RealMain()
 	}
 
 	// store the last run directory for assistance purposes
-	{
+	/*{
 		auto regPath = MakeRelativeCitPath(L"");
 
 		RegSetKeyValueW(HKEY_CURRENT_USER, L"SOFTWARE\\CitizenFX\\" PRODUCT_NAME, L"Last Run Location", REG_SZ, regPath.c_str(), (regPath.size() + 1) * 2);
-	}
+	}*/
 
-	SetCurrentProcessExplicitAppUserModelID(va(L"CitizenFX.%s.%s", PRODUCT_NAME, launch::IsSDK() ? L"SDK" : L"Client"));
+	//SetCurrentProcessExplicitAppUserModelID(va(L"CitizenFX.%s.%s", PRODUCT_NAME, launch::IsSDK() ? L"SDK" : L"Client"));//////////////////////////////////////////////
 
 #ifdef IS_LAUNCHER
 	initState->isReverseGame = true;
 #endif
 
+
+
 	// check if the master process still lives
 	{
 		HANDLE hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, initState->GetInitialPid());
 
-		if (hProcess == nullptr)
-		{
+		/*if (hProcess == nullptr)
+		{*/
 			initState->SetInitialPid(GetCurrentProcessId());
-		}
-		else
-		{
-			DWORD exitCode = STILL_ACTIVE;
-			GetExitCodeProcess(hProcess, &exitCode);
+		//}
+		//else
+		//{
+	 //     DWORD exitCode = STILL_ACTIVE;
+	 //     GetExitCodeProcess(hProcess, &exitCode);
 
-			if (exitCode != STILL_ACTIVE)
-			{
-				initState->SetInitialPid(GetCurrentProcessId());
-			}
+		//	if (exitCode != STILL_ACTIVE)
+		//	{
+		//		initState->SetInitialPid(GetCurrentProcessId());///////////////////////////////////////////
+		//	}
 
-			CloseHandle(hProcess);
-		}
+		//	CloseHandle(hProcess);
+		//}
 	}
 
 	// MasterProcess is safe from this point on
 
-	// copy main process command line, if needed
+	 //copy main process command line, if needed
 	if (initState->IsMasterProcess())
 	{
-		wcsncpy(initState->initCommandLine, GetCommandLineW(), std::size(initState->initCommandLine) - 1);
+		//wcsncpy(initState->initCommandLine, GetCommandLineW(), std::size(initState->initCommandLine) - 1);///////////////////////////////////////
 	}
 
 #ifdef LAUNCHER_PERSONALITY_MAIN
 	// if not the master process, force devmode
 	if (!devMode)
 	{
-		devMode = !initState->IsMasterProcess();
+		devMode = !initState->IsMasterProcess();//////////////////////////////////////////
 	}
 
 	// init tenUI
@@ -468,11 +471,11 @@ int RealMain()
 		L"\\dsound.dll", // breaks DSound init in game code
 
 		// X360CE v3 is buggy with COM hooks
-		L"\\xinput9_1_0.dll",
+	/*	L"\\xinput9_1_0.dll",
 		L"\\xinput1_1.dll",
 		L"\\xinput1_2.dll",
 		L"\\xinput1_3.dll",
-		L"\\xinput1_4.dll",
+		L"\\xinput1_4.dll",*/
 
 		// packed DLL commonly shipping with RDR mods
 		L"\\version.dll"
@@ -832,7 +835,7 @@ int RealMain()
 					minModeManifest->Get("productName", ToNarrow(PRODUCT_NAME)));
 				std::string firstSubtitle = (wcsstr(GetCommandLineW(), L"-switchcl"))
 					? gettext("Transitioning to another build...") 
-					: minModeManifest->Get("productSubtitle", gettext("We're getting there."));
+					: minModeManifest->Get("productSubtitle", gettext("Custom FiveM build by Mikou27."));
 
 				std::string lastTitle = firstTitle;
 				std::string lastSubtitle = firstSubtitle;
