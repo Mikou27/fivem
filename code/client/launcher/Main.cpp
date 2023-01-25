@@ -667,29 +667,29 @@ int RealMain()
 			checkElevation = false;
 #endif
 
-			if (checkElevation)
-			{
-				HANDLE hToken;
+			//if (checkElevation)
+			//{
+			//	HANDLE hToken;
 
-				if (OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken))
-				{
-					TOKEN_ELEVATION_TYPE elevationData;
-					DWORD size;
+			//	if (OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken))
+			//	{
+			//		TOKEN_ELEVATION_TYPE elevationData;
+			//		DWORD size;
 
-					if (GetTokenInformation(hToken, TokenElevationType, &elevationData, sizeof(elevationData), &size))
-					{
-						if (elevationData == TokenElevationTypeFull)
-						{
-							const wchar_t* elevationComplaint = va(gettext(L"FiveM does not support running under elevated privileges. Please change your Windows settings to not run FiveM as administrator.\nThe game will exit now."));
-							MessageBox(nullptr, elevationComplaint, L"FiveM", MB_OK | MB_ICONERROR);
+			//		if (GetTokenInformation(hToken, TokenElevationType, &elevationData, sizeof(elevationData), &size))
+			//		{
+			//			if (elevationData == TokenElevationTypeFull)
+			//			{
+			//				const wchar_t* elevationComplaint = va(gettext(L"FiveM does not support running under elevated privileges. Please change your Windows settings to not run FiveM as administrator.\nThe game will exit now."));
+			//				MessageBox(nullptr, elevationComplaint, L"FiveM", MB_OK | MB_ICONERROR);
 
-							return 0;
-						}
-					}
+			//				return 0;
+			//			}
+			//		}
 
-					CloseHandle(hToken);
-				}
-			}
+			//		CloseHandle(hToken);
+			//	}
+			//}
 
 			{
 				HANDLE hFile = CreateFile(MakeRelativeCitPath(L"writable_test").c_str(), GENERIC_WRITE, FILE_SHARE_DELETE, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY | FILE_FLAG_DELETE_ON_CLOSE, nullptr);
